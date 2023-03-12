@@ -10,19 +10,22 @@ def header():
     print(f"\t{col['yellow']} ----- HANGMAN GAME ----- {col['clean']}")
     print(f"\t{col['yellow']} 💩💩  Nutella mode  💩💩{col['clean']} ")
 
-    print(""" 
+    print(f""" 
           📃 RULES 📃
       ❕ You have 6 lifes
       ❕ Type "EXIT" to quit
     
-    
+    {col['green-text']}
     Choose a Word Theme:
         (A) Object
         (B) Body part
-        (C) Food""")
+        (C) Food{col['clean']}""")
     while True:
         try:
             word_theme = input(" >> ").upper()
+            if word_theme == "EXIT":
+                end_game(f"{col['pink']}QUIT?? Too weak...{col['clean']}")
+
             validate_user_input(word_theme)
             is_valid = validate_user_input(word_theme)
             if is_valid and word_theme in "ABC":
@@ -30,7 +33,8 @@ def header():
                 break
             else:
                 raise ValueError
-        except:
+
+        except ValueError:
             print("Invalid value!")
             continue
 
@@ -97,7 +101,6 @@ def stars_life():
     Starts amount of life and creates visual "life" element
     :return:
     """
-    print("\t::LIFE::")
     life = 6
     hearts_list = ["🧡"] * life
 
@@ -123,13 +126,13 @@ def change_placement_letters(random_word, isCorrectLetter, place_letters, user_i
 
 
 def show_placement_letters(place_letters):
-    print("""
+    print(f"""{col['yellow-text']}
 ============
 |          §
 |          §   
 |
 |
-|""")
+|{col['clean']}""")
     print("| ", end="")
     for place in place_letters:
         print(place, end=" ")
@@ -160,7 +163,8 @@ def letter_test(random_word, user_input, life, hearts_list, wrong_letters, right
 
 def win_game(place_letter):
     if "_" not in place_letter:
-        end_game(f"\t\t🎉{col['green']} YOU WON, CONGRATS! {col['clean']}🎉\n👿 But I really wish you had died.... 👿")
+        end_game(f"\t\t🎉{col['green']} YOU WON, CONGRATS! {col['clean']}🎉\n👿 {col['red-text']}"
+                 f"But I really wish you had died... 👿{col['clean']}")
 
 
 def end_game(msg):
@@ -169,4 +173,4 @@ def end_game(msg):
     :return:
     """
     print(msg)
-    quit()
+    exit()
