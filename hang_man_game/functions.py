@@ -1,4 +1,5 @@
 from random import randint
+from collors import collors as col
 
 
 def header():
@@ -6,8 +7,8 @@ def header():
     Gives a header with Current Mode and Rules for the player
     :return:
     """
-    print("\t----- HANGMAN GAME ----- ")
-    print("\t💩💩 Nutella mode 💩💩")
+    print(f"\t{col['yellow']} ----- HANGMAN GAME ----- {col['clean']}")
+    print(f"\t{col['yellow']} 💩💩  Nutella mode  💩💩{col['clean']} ")
 
     print(""" 
           📃 RULES 📃
@@ -19,19 +20,26 @@ def header():
         (A) Object
         (B) Body part
         (C) Food""")
-    try:
-        word_theme = input(" >> ").upper()
-        validate_user_input(word_theme)
-    except:
-        print("Invalid value!")
-    return word_theme
+    while True:
+        try:
+            word_theme = input(" >> ").upper()
+            validate_user_input(word_theme)
+            is_valid = validate_user_input(word_theme)
+            if is_valid and word_theme in "ABC":
+                return word_theme
+                break
+            else:
+                raise ValueError
+        except:
+            print("Invalid value!")
+            continue
 
 
 def validate_user_input(user_input):
     is_valid = True
     if user_input == " " or len(user_input) > 1 or len(user_input) < 1 or not user_input.isalpha():
-        raise ValueError
         is_valid = False
+        raise ValueError
 
     return is_valid
 
@@ -51,7 +59,8 @@ def random_word(word_theme):
     object_word_tip = ['used in writing', 'ancient method for communication', 'body part']
     animal_word_tip = ['animal']
     food_word_tip = ['food']
-
+    words = [" "]
+    word_tip = [" "]
     if word_theme == "A":
         words = object_words.copy()
         word_tip = object_word_tip.copy()
@@ -151,7 +160,7 @@ def letter_test(random_word, user_input, life, hearts_list, wrong_letters, right
 
 def win_game(place_letter):
     if "_" not in place_letter:
-        end_game("\t\t🎉 YOU WON, CONGRATS! 🎉\n👿 But I really wish you had died.... 👿")
+        end_game(f"\t\t🎉{col['green']} YOU WON, CONGRATS! {col['clean']}🎉\n👿 But I really wish you had died.... 👿")
 
 
 def end_game(msg):

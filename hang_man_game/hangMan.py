@@ -52,9 +52,11 @@ while True:
 
 # DESTACAR
 # Colocar cor no código
+# Colocar temporizador no código
 
 #  biblioteca inquirer (só funciona para exe)
-#  auto-py-to-exe 2.32.0
+    # Tentei : auto-py-to-exe; cxfreeze ((funcionou melhor)); pyinstaller
+    # NSIS --> tudo um arquivo só
 
 #  ===========
 #  3 modos de jogo - Nutela / Café com leite / Raiz
