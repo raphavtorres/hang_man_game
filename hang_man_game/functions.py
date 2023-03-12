@@ -1,5 +1,80 @@
 from random import randint
 from collors import collors as col
+import time
+
+# libs to time
+from threading import Timer
+import os
+
+
+def end_game(msg=f"\t\t{col['red']}💀 GAME OVER 💀{col['clean']}\n🔥 {col['red-text']}You've died, see you in HELL! {col['clean']}🔥"):
+    """
+    Function to end the game in different scenarios
+    :return:
+    """
+    print(msg)
+    pid = os.getpid()
+    os.kill(pid, 0)
+    # exit()
+
+
+def timer(seconds_amount):
+    """
+    Starts the timer
+    :return:
+    """
+    timer = Timer(seconds_amount, time_end)
+    timer.start()
+
+
+def startTimeGame():
+    game_time = time.time()
+    return game_time
+
+
+def loose_game():
+    end_game()
+
+
+def time_end():
+    print(f"\t\t{col['red-text']}TIME'S UP ⏳{col['clean']}")
+    end_game()
+
+
+def input_style():
+    """
+    Controls input's bar style
+    :return:
+    """
+    return f"{col['green-text']} >> {col['clean']}"
+
+
+def game_level():
+    """
+    Choose game level (Nutella; Coffee with Milk; Root)
+    :return:
+    """
+    print(f"""{col['yellow']}CHOOSE YOUR LEVEL!
+    (A) Nutella 💩
+    (B) Coffee with Milk ☕
+    (C) Root 🌳
+{col['clean']}""")
+    try:
+        level_choice = input(input_style()).upper()
+
+        validate_user_input(level_choice)
+        is_valid = validate_user_input(level_choice)
+        if is_valid and level_choice in "ABC":
+            if level_choice == "A":
+                return 'Nutella', '💩'
+            elif level_choice == "B":
+                return 'Coffee with Milk', '☕'
+            elif level_choice == "C":
+                return 'Root', '🌳'
+        else:
+            raise ValueError
+    except ValueError:
+        print("Invalid value!")
 
 
 def header():
@@ -7,8 +82,10 @@ def header():
     Gives a header with Current Mode and Rules for the player
     :return:
     """
-    print(f"\t{col['yellow']} ----- HANGMAN GAME ----- {col['clean']}")
-    print(f"\t{col['yellow']} 💩💩  Nutella mode  💩💩{col['clean']} ")
+    level_choice, emoji = game_level()
+    print(f"""
+    {col['yellow-text']} ----- HANGMAN GAME ----- 
+     {emoji} {level_choice} mode {emoji} {col['clean']}""")
 
     print(f""" 
           📃 RULES 📃
@@ -33,7 +110,6 @@ def header():
                 break
             else:
                 raise ValueError
-
         except ValueError:
             print("Invalid value!")
             continue
@@ -161,16 +237,8 @@ def letter_test(random_word, user_input, life, hearts_list, wrong_letters, right
     return isCorrectLetter, life, wrong_letters
 
 
-def win_game(place_letter):
+def win_game(place_letter, game_time):
     if "_" not in place_letter:
+        print(f"\n{col['green-text']}You took {int(time.time() - game_time)} seconds to finish!{col['clean']}")
         end_game(f"\t\t🎉{col['green']} YOU WON, CONGRATS! {col['clean']}🎉\n👿 {col['red-text']}"
                  f"But I really wish you had died... 👿{col['clean']}")
-
-
-def end_game(msg):
-    """
-    Function to end the game in different cenarios
-    :return:
-    """
-    print(msg)
-    exit()

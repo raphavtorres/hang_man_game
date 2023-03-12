@@ -11,8 +11,14 @@ random_word, tip = fc.random_word(word_theme)
 
 print(f"{col['blue']}CLUE: {tip}{col['clean']}")
 
-#  LIFE
+# LIFE
 hearts_list, life = fc.stars_life()
+
+# TIMER
+fc.timer(3.0)  # 20 pro hard
+
+# Game time
+game_time = fc.startTimeGame()
 
 #  WRONG AND RIGHT LETTERS LISTS
 wrong_letters = []
@@ -29,7 +35,7 @@ while True:
     print(f" {col['red']}||Wrong letters ❌: {wrong_letters}||{col['clean']}")
 
     fc.show_placement_letters(placement_letters)
-    fc.win_game(placement_letters)
+    fc.win_game(placement_letters, game_time)
 
     try:
         user_input = input(">> ").lower()
@@ -48,12 +54,15 @@ while True:
         print("Invalid input dummy. Do it again! (Only ONE *letter*)")
 
     if life == 0:
-        fc.end_game("\t\t💀 GAME OVER 💀\n🔥 You've died, see you in HELL! 🔥")
+        fc.loose_game()
 
 
 # DESTACAR
-# Colocar cor no código
-# Colocar temporizador no código
+# Caso a pessoa erre, falar qual era a palavra
+# Separar níveis
+# Colocar o tempo que a pessoa demorou para terminar
+# Mostrar temporizador para usuário
+# Opção de colocar e remover palavras
 
 # biblioteca inquirer (só funciona para exe)
     # Tentei : auto-py-to-exe; cxfreeze ((funcionou melhor)); pyinstaller
