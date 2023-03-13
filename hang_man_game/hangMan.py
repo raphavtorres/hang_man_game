@@ -1,4 +1,5 @@
 import functions as fc
+import word_api
 from collors import collors as col
 
 word_theme, level_choice = fc.header()
@@ -6,16 +7,20 @@ word_theme, level_choice = fc.header()
 opt_add_rmv = None
 if level_choice == 'Coffee with Milk':
     opt_add_rmv = fc.show_add_remove_opt()
-    print(opt_add_rmv)
+    # print(opt_add_rmv)
 
-
-random_word, tip = fc.random_word(word_theme, opt_add_rmv)
-# print(random_word)
-# print(word_theme)
+if level_choice != 'Root':
+    random_word, tip = fc.random_word(word_theme, opt_add_rmv, level_choice)
+else:
+    random_word, tip = word_api.get_api_random()
+    print(random_word)
 
 # TIMER
 if level_choice != 'Nutella':
-    fc.timer(30.0)  # 20 pro hard
+    if level_choice == 'Coffee with Milk':
+        fc.timer(30.0)
+    else:
+        fc.timer(20.0)
 
 # Game time
 game_time = fc.start_time_game()
@@ -64,26 +69,16 @@ while True:
 
 
 # DESTACAR
-# Separar níveis
-# Colocar o tempo que a pessoa demorou para terminar
 # Mostrar temporizador para usuário
-# Opção de colocar e remover palavras
 
-# biblioteca inquirer (só funciona para exe)
-    # Tentei : auto-py-to-exe; cxfreeze ((funcionou melhor)); pyinstaller
-    # NSIS --> tudo um arquivo só
-
-#  ===========
-#  3 modos de jogo - Nutela / Café com leite / Raiz
-
-# Café com leite
-# Opção de adcionar ou remover palavras / dicas
-# Tempo de jogo ==> 30 seg
+# biblioteca: inquirer
+# Tentei : auto-py-to-exe; cxfreeze ((funcionou melhor)); pyinstaller
+# NSIS --> tudo um arquivo só
 
 # Raiz
 # Palavras trazidas de uma API
-# tempo de jogo == 20 seg (opcional - Thread)
-#  Como trabalhar com API:
+# tempo de jogo == 20 seg
+# Como trabalhar com API:
 
     """
     api.dicionario.aberto.net ((pingo uma vez para palavra e outra para a dica (vem dentro de xml)))

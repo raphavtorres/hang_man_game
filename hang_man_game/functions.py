@@ -83,31 +83,34 @@ def header():
 
     print(f"""
     {col['yellow-text']} ----- HANGMAN GAME ----- 
-    {emoji} {level_choice} mode {emoji} {col['clean']}""")
+    {emoji}  {level_choice} mode {emoji} {col['clean']}""")
 
     print(f""" 
           📃 RULES 📃
       ❕ You have 6 lifes
       ❕ Type "EXIT" to quit
-    
-    {col['green-text']}
+""")
+
+    if level_choice != "Root":
+        print(f"""
+        {col['green-text']}
     Choose a Word Theme:
         (A) Object
         (B) Body part
         (C) Food{col['clean']}""")
-    while True:
-        try:
-            word_theme = input(" >> ").upper()
-            if word_theme == "EXIT":
-                end_game(f"{col['pink']}QUIT?? Too weak...{col['clean']}")
-            is_valid = validate_user_input(word_theme)
-            if is_valid and word_theme in "ABC":
-                return word_theme, level_choice
-            else:
-                raise ValueError
-        except ValueError:
-            print("Invalid value!")
-            continue
+        while True:
+            try:
+                word_theme = input(" >> ").upper()
+                if word_theme == "EXIT":
+                    end_game(f"{col['pink']}QUIT?? Too weak...{col['clean']}")
+                is_valid = validate_user_input(word_theme)
+                if is_valid and word_theme in "ABC":
+                    return word_theme, level_choice
+                else:
+                    raise ValueError
+            except ValueError:
+                print("Invalid value!")
+                continue
 
 
 def validate_user_input(user_input):
@@ -132,7 +135,7 @@ def show_add_remove_opt():
 
 def validate_add_remove(user_input):
     is_valid_input = True
-    if user_input == " " or len(user_input) < 1 or not user_input.isalpha():
+    if len(user_input) < 1 or not user_input.isalpha():
         raise ValueError
     else:
         return is_valid_input
@@ -140,14 +143,15 @@ def validate_add_remove(user_input):
 
 def add_remove_word(opt_add_rmv, words, word_tip):
     for i in range(2):
-        print(words)
+        print(f"Words: {words}")
+        print(f"Words tips: {word_tip}")
         if opt_add_rmv == "Add Word":
             while True:
                 try:
-                    new_word = input("New Word >> ").lower()
+                    new_word = input("New Word >> ").lower().strip()
                     valid_new_word = validate_add_remove(new_word)
 
-                    new_word_tip = input("New word's tip >> ").lower()
+                    new_word_tip = input("New word's tip >> ").lower().strip()
                     valid_tip = validate_add_remove(new_word_tip)
 
                     if valid_new_word and valid_tip and new_word not in words:
@@ -163,11 +167,13 @@ def add_remove_word(opt_add_rmv, words, word_tip):
         elif opt_add_rmv == "Remove Word":
             while True:
                 try:
-                    word_to_remove = input("Word to remove >> ").lower()
+                    word_to_remove = input("Word to remove >> ").lower().strip()
                     valid_word_remove = validate_add_remove(word_to_remove)
 
                     if valid_word_remove and word_to_remove in words:
+                        word_index = words.index(word_to_remove)
                         words.remove(word_to_remove)
+                        word_tip.pop(word_index)
                         break
                     else:
                         print("WORD NOT IN LIST OF WORDS")
@@ -177,12 +183,17 @@ def add_remove_word(opt_add_rmv, words, word_tip):
                     continue
         if i == 1:
             break
-        another = input("1/2 new words. Want's to put one more? [Y/N]: ").lower()
+
+        another = ''
+        if opt_add_rmv == "Add Word":
+            another = input("1/2 words taken. Want's to remove one more? [Y/N]: ").lower()
+        elif opt_add_rmv == "Remove Word":
+            another = input("1/2 new words. Want's to put one more? [Y/N]: ").lower()
         if another != "y":
             break
 
 
-def random_word(word_theme, opt_add_rmv):
+def random_word(word_theme, opt_add_rmv, level_choice):
     """
     Returns a random word | Has a database of words and hints
     :return:
@@ -210,12 +221,12 @@ def random_word(word_theme, opt_add_rmv):
         words = food_words.copy()
         word_tip = food_word_tip.copy()
 
+    if level_choice == "Coffee with Milk":
+        add_remove_word(opt_add_rmv, words, word_tip)
+
     rand_index = randint(0, len(words) - 1)
     random_word_var = words[rand_index]
     tip = word_tip[rand_index]
-
-    if opt_add_rmv == "Coffee with Milk":
-        add_remove_word(opt_add_rmv, words, word_tip)
 
     return random_word_var, tip
 
