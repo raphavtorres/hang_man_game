@@ -73,7 +73,7 @@ def get_theme(level_choice):
         {col['green-text']}
     Choose a Word Theme:
         (A) Object
-        (B) Body part
+        (B) Animal
         (C) Food{col['clean']}""")
         while True:
             try:
@@ -204,14 +204,20 @@ def random_word(word_theme, opt_add_rmv, level_choice):
     """
 
     # Themes: Object, Body part, Food
-    object_words = ['pencil', 'telegraph', 'elbow']
-    animal_words = ['animal']
-    food_words = ['food']
+    object_words = ['pencil', 'pillow', 'blanket', 'whiteboard', 'toothbrush']
+    animal_words = ['donkey', 'cheetah', 'squirrel', 'elephant', 'salamander']
+    food_words = ['spaghetti', 'yoghurt', 'biryani', 'pineapple', 'gingerbread']
 
     # Themes Tips:
-    object_word_tip = ['used in writing', 'ancient method for communication', 'body part']
-    animal_word_tip = ['animal']
-    food_word_tip = ['food']
+    object_word_tip = ['used in writing', 'for your head', 'to cover', 'you write on it', 'used in personal cleaning']
+    animal_word_tip = ['looks like a horse', 'looks like a cat', 'looks like a mouse', 'is big', 'looks like a lizard']
+    food_word_tip = [
+        'a type of pasta',
+        'a semi-solid food item made from fermented milk',
+        'a food item made with seasoned rice, vegetables and sometimes meat',
+        'a fruit surrounded by tough segmented skin',
+        'cake made with molasses (molasses is thick, dark brown syrup)'
+    ]
     words = [" "]
     word_tip = [" "]
 

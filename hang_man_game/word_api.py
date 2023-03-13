@@ -17,9 +17,3 @@ def get_api_random():
         break
 
     return word, definition
-
-# 'title': 'No Definitions Found'
-
-# if 'No Definitions Found' not in definition_response.json():
-# print(word)
-# print(definition_response.json())

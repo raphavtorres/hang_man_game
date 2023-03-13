@@ -79,10 +79,7 @@ while True:
 # Tentei : auto-py-to-exe; cxfreeze ((funcionou melhor)); pyinstaller
 # NSIS --> tudo um arquivo só
 
-# Raiz
-# Palavras trazidas de uma API
-# tempo de jogo == 20 seg
-# Como trabalhar com API:
+
 
     """
     api.dicionario.aberto.net ((pingo uma vez para palavra e outra para a dica (vem dentro de xml)))
