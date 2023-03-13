@@ -1,21 +1,22 @@
 from random import randint
 from collors import collors as col
 import time
+import inquirer
 
 # libs to time
 from threading import Timer
 import os
 
 
-def end_game(msg=f"\t\t{col['red']}💀 GAME OVER 💀{col['clean']}\n🔥 {col['red-text']}You've died, see you in HELL! {col['clean']}🔥"):
+def end_game(msg=f"\t\t{col['red-text']}💀 GAME OVER 💀\n"
+                 f"🔥 You've died, see you in HELL! 🔥{col['clean']}"):
     """
     Function to end the game in different scenarios
     :return:
     """
     print(msg)
     pid = os.getpid()
-    os.kill(pid, 0)
-    # exit()
+    os.kill(pid, -1)  # case problem change to 0
 
 
 def timer(seconds_amount):
@@ -23,16 +24,17 @@ def timer(seconds_amount):
     Starts the timer
     :return:
     """
-    timer = Timer(seconds_amount, time_end)
-    timer.start()
+    timer_variable = Timer(seconds_amount, time_end)
+    timer_variable.start()
 
 
-def startTimeGame():
+def start_time_game():
     game_time = time.time()
     return game_time
 
 
-def loose_game():
+def loose_game(secret_word):
+    print(f"The secret word was: {secret_word}")
     end_game()
 
 
@@ -54,27 +56,15 @@ def game_level():
     Choose game level (Nutella; Coffee with Milk; Root)
     :return:
     """
-    print(f"""{col['yellow']}CHOOSE YOUR LEVEL!
-    (A) Nutella 💩
-    (B) Coffee with Milk ☕
-    (C) Root 🌳
-{col['clean']}""")
-    try:
-        level_choice = input(input_style()).upper()
+    questions = [
+        inquirer.List('size',
+                      message=f"{col['yellow']}CHOOSE YOUR LEVEL!{col['clean']}",
+                      choices=['Nutella', 'Coffee with Milk', 'Root'],
+                      ),
+    ]
 
-        validate_user_input(level_choice)
-        is_valid = validate_user_input(level_choice)
-        if is_valid and level_choice in "ABC":
-            if level_choice == "A":
-                return 'Nutella', '💩'
-            elif level_choice == "B":
-                return 'Coffee with Milk', '☕'
-            elif level_choice == "C":
-                return 'Root', '🌳'
-        else:
-            raise ValueError
-    except ValueError:
-        print("Invalid value!")
+    level_choice = inquirer.prompt(questions)
+    return level_choice['size']
 
 
 def header():
@@ -82,10 +72,18 @@ def header():
     Gives a header with Current Mode and Rules for the player
     :return:
     """
-    level_choice, emoji = game_level()
+    level_choice = game_level()
+    emoji = ''
+    if level_choice == 'Nutella':
+        emoji = '💩'
+    elif level_choice == 'Coffee with Milk':
+        emoji = '☕'
+    elif level_choice == 'Root':
+        emoji = '🌳'
+
     print(f"""
     {col['yellow-text']} ----- HANGMAN GAME ----- 
-     {emoji} {level_choice} mode {emoji} {col['clean']}""")
+    {emoji} {level_choice} mode {emoji} {col['clean']}""")
 
     print(f""" 
           📃 RULES 📃
@@ -102,12 +100,9 @@ def header():
             word_theme = input(" >> ").upper()
             if word_theme == "EXIT":
                 end_game(f"{col['pink']}QUIT?? Too weak...{col['clean']}")
-
-            validate_user_input(word_theme)
             is_valid = validate_user_input(word_theme)
             if is_valid and word_theme in "ABC":
-                return word_theme
-                break
+                return word_theme, level_choice
             else:
                 raise ValueError
         except ValueError:
@@ -118,13 +113,76 @@ def header():
 def validate_user_input(user_input):
     is_valid = True
     if user_input == " " or len(user_input) > 1 or len(user_input) < 1 or not user_input.isalpha():
-        is_valid = False
+        # is_valid = False
         raise ValueError
-
     return is_valid
 
 
-def random_word(word_theme):
+def show_add_remove_opt():
+    questions = [
+        inquirer.List('size',
+                      message=f"{col['yellow']}CHOOSE AN OPTION: {col['clean']}",
+                      choices=['Add Word', 'Remove Word', 'Continue'],
+                      ),
+    ]
+
+    choice = inquirer.prompt(questions)
+    return choice['size']
+
+
+def validate_add_remove(user_input):
+    is_valid_input = True
+    if user_input == " " or len(user_input) < 1 or not user_input.isalpha():
+        raise ValueError
+    else:
+        return is_valid_input
+
+
+def add_remove_word(opt_add_rmv, words, word_tip):
+    for i in range(2):
+        print(words)
+        if opt_add_rmv == "Add Word":
+            while True:
+                try:
+                    new_word = input("New Word >> ").lower()
+                    valid_new_word = validate_add_remove(new_word)
+
+                    new_word_tip = input("New word's tip >> ").lower()
+                    valid_tip = validate_add_remove(new_word_tip)
+
+                    if valid_new_word and valid_tip and new_word not in words:
+                        words.append(new_word)
+                        word_tip.append(new_word_tip)
+                        break
+                    else:
+                        print("WORD ALREADY IN LIST OF WORDS")
+                        raise ValueError
+                except ValueError:
+                    print("Invalid value!")
+                    continue
+        elif opt_add_rmv == "Remove Word":
+            while True:
+                try:
+                    word_to_remove = input("Word to remove >> ").lower()
+                    valid_word_remove = validate_add_remove(word_to_remove)
+
+                    if valid_word_remove and word_to_remove in words:
+                        words.remove(word_to_remove)
+                        break
+                    else:
+                        print("WORD NOT IN LIST OF WORDS")
+                        raise ValueError
+                except ValueError:
+                    print("Invalid value!")
+                    continue
+        if i == 1:
+            break
+        another = input("1/2 new words. Want's to put one more? [Y/N]: ").lower()
+        if another != "y":
+            break
+
+
+def random_word(word_theme, opt_add_rmv):
     """
     Returns a random word | Has a database of words and hints
     :return:
@@ -141,6 +199,7 @@ def random_word(word_theme):
     food_word_tip = ['food']
     words = [" "]
     word_tip = [" "]
+
     if word_theme == "A":
         words = object_words.copy()
         word_tip = object_word_tip.copy()
@@ -152,10 +211,13 @@ def random_word(word_theme):
         word_tip = food_word_tip.copy()
 
     rand_index = randint(0, len(words) - 1)
-    random_word = words[rand_index]
+    random_word_var = words[rand_index]
     tip = word_tip[rand_index]
 
-    return random_word, tip
+    if opt_add_rmv == "Coffee with Milk":
+        add_remove_word(opt_add_rmv, words, word_tip)
+
+    return random_word_var, tip
 
 
 def loose_life(life, hearts_list):
@@ -188,15 +250,15 @@ def create_placement_letters(rand_word):
     return place_letters
 
 
-def change_placement_letters(random_word, isCorrectLetter, place_letters, user_input):
+def change_placement_letters(random_word_var, is_correct_letter, place_letters, user_input):
     """
     Creates a visual control of the game to the player | Changes the placement letters
-    :param rand_word:
+    :param:
     :return:
     """
-    if isCorrectLetter:
+    if is_correct_letter:
         for i, place in enumerate(place_letters):
-            if random_word[i] == user_input:
+            if random_word_var[i] == user_input:
                 place_letters[i] = user_input
     return place_letters
 
@@ -215,14 +277,14 @@ def show_placement_letters(place_letters):
     print("")
 
 
-def letter_test(random_word, user_input, life, hearts_list, wrong_letters, right_letters):
+def letter_test(random_word_var, user_input, life, hearts_list, wrong_letters, right_letters):
     """
     Tests if the letter is in "game word" or not
     :return: isCorrectLetter | bool
     """
-    isCorrectLetter = False
+    is_correct_letter = False
     msg_used_letter = f"You already tried the letter {user_input.upper()}..."
-    if user_input not in random_word:
+    if user_input not in random_word_var:
         if user_input in wrong_letters:
             print(msg_used_letter)
         else:
@@ -232,13 +294,13 @@ def letter_test(random_word, user_input, life, hearts_list, wrong_letters, right
         if user_input in right_letters:
             print(msg_used_letter)
         else:
-            isCorrectLetter = True
+            is_correct_letter = True
             right_letters.append(user_input)
-    return isCorrectLetter, life, wrong_letters
+    return is_correct_letter, life, wrong_letters
 
 
 def win_game(place_letter, game_time):
     if "_" not in place_letter:
         print(f"\n{col['green-text']}You took {int(time.time() - game_time)} seconds to finish!{col['clean']}")
-        end_game(f"\t\t🎉{col['green']} YOU WON, CONGRATS! {col['clean']}🎉\n👿 {col['red-text']}"
+        end_game(f"\t\t{col['green']}🎉 YOU WON, CONGRATS! 🎉{col['clean']}\n{col['red-text']}👿 "
                  f"But I really wish you had died... 👿{col['clean']}")

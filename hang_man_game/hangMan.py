@@ -1,24 +1,29 @@
-from random import randint
 import functions as fc
 from collors import collors as col
 
-word_theme = fc.header()
+word_theme, level_choice = fc.header()
 
-random_word, tip = fc.random_word(word_theme)
+opt_add_rmv = None
+if level_choice == 'Coffee with Milk':
+    opt_add_rmv = fc.show_add_remove_opt()
+    print(opt_add_rmv)
 
+
+random_word, tip = fc.random_word(word_theme, opt_add_rmv)
 # print(random_word)
 # print(word_theme)
+
+# TIMER
+if level_choice != 'Nutella':
+    fc.timer(30.0)  # 20 pro hard
+
+# Game time
+game_time = fc.start_time_game()
 
 print(f"{col['blue']}CLUE: {tip}{col['clean']}")
 
 # LIFE
 hearts_list, life = fc.stars_life()
-
-# TIMER
-fc.timer(3.0)  # 20 pro hard
-
-# Game time
-game_time = fc.startTimeGame()
 
 #  WRONG AND RIGHT LETTERS LISTS
 wrong_letters = []
@@ -30,9 +35,9 @@ while True:
     print("-" * 40)
     for heart in hearts_list:
         print(heart, end="")
-    print("")
+    print(f" = {life}")
 
-    print(f" {col['red']}||Wrong letters ❌: {wrong_letters}||{col['clean']}")
+    print(f" {col['red-text']}||Wrong letters ❌: {wrong_letters}||{col['clean']}")
 
     fc.show_placement_letters(placement_letters)
     fc.win_game(placement_letters, game_time)
@@ -46,19 +51,19 @@ while True:
 
         is_valid = fc.validate_user_input(user_input)
         if is_valid:
-            isCorrectLetter, life, wrong_letters = fc.letter_test(random_word, user_input, life, hearts_list,
-                                                                         wrong_letters, right_letters)
-            placement_letters = fc.change_placement_letters(random_word, isCorrectLetter, placement_letters,
-                                                                   user_input)
+            isCorrectLetter, life, wrong_letters = fc.letter_test(
+                random_word, user_input, life, hearts_list, wrong_letters, right_letters)
+            placement_letters = fc.change_placement_letters(random_word, isCorrectLetter,
+                                                            placement_letters, user_input)
+
     except ValueError:
-        print("Invalid input dummy. Do it again! (Only ONE *letter*)")
+        print("Invalid input, dummy. Do it again! (Only ONE *letter*)")
 
     if life == 0:
-        fc.loose_game()
+        fc.loose_game(random_word)
 
 
 # DESTACAR
-# Caso a pessoa erre, falar qual era a palavra
 # Separar níveis
 # Colocar o tempo que a pessoa demorou para terminar
 # Mostrar temporizador para usuário
@@ -84,4 +89,3 @@ while True:
     api.dicionario.aberto.net ((pingo uma vez para palavra e outra para a dica (vem dentro de xml)))
     libs: requests
     """
-
