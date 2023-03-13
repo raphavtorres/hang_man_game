@@ -1,5 +1,6 @@
 import requests
 
+
 def get_api_random():
     while True:
         word_url = "https://random-word-api.herokuapp.com/word?number=1"

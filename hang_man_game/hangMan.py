@@ -2,7 +2,11 @@ import functions as fc
 import word_api
 from collors import collors as col
 
-word_theme, level_choice = fc.header()
+level_choice = fc.header()
+word_theme = ''
+if level_choice != 'Root':
+    word_theme = fc.get_theme(level_choice)
+
 
 opt_add_rmv = None
 if level_choice == 'Coffee with Milk':

@@ -67,6 +67,29 @@ def game_level():
     return level_choice['size']
 
 
+def get_theme(level_choice):
+    if level_choice != "Root":
+        print(f"""
+        {col['green-text']}
+    Choose a Word Theme:
+        (A) Object
+        (B) Body part
+        (C) Food{col['clean']}""")
+        while True:
+            try:
+                word_theme = input(" >> ").upper()
+                if word_theme == "EXIT":
+                    end_game(f"{col['pink']}QUIT?? Too weak...{col['clean']}")
+                is_valid = validate_user_input(word_theme)
+                if is_valid and word_theme in "ABC":
+                    return word_theme
+                else:
+                    raise ValueError
+            except ValueError:
+                print("Invalid value!")
+                continue
+
+
 def header():
     """
     Gives a header with Current Mode and Rules for the player
@@ -91,26 +114,7 @@ def header():
       ❕ Type "EXIT" to quit
 """)
 
-    if level_choice != "Root":
-        print(f"""
-        {col['green-text']}
-    Choose a Word Theme:
-        (A) Object
-        (B) Body part
-        (C) Food{col['clean']}""")
-        while True:
-            try:
-                word_theme = input(" >> ").upper()
-                if word_theme == "EXIT":
-                    end_game(f"{col['pink']}QUIT?? Too weak...{col['clean']}")
-                is_valid = validate_user_input(word_theme)
-                if is_valid and word_theme in "ABC":
-                    return word_theme, level_choice
-                else:
-                    raise ValueError
-            except ValueError:
-                print("Invalid value!")
-                continue
+    return level_choice
 
 
 def validate_user_input(user_input):
