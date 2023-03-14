@@ -8,8 +8,7 @@ from threading import Timer
 import os
 
 
-def end_game(msg=f"\t\t{col['red-text']}💀 GAME OVER 💀\n"
-                 f"🔥 You've died, see you in HELL! 🔥{col['clean']}"):
+def end_game(msg=f"\t{col['red-text']}💀 GAME OVER 💀{col['clean']}"):
     """
     Function to end the game in different scenarios
     :return:
@@ -39,7 +38,7 @@ def loose_game(secret_word):
 
 
 def time_end():
-    print(f"\t\t{col['red-text']}TIME'S UP ⏳{col['clean']}")
+    print(f"\t{col['red-text']}TIME'S UP ⏳{col['clean']}")
     end_game()
 
 
@@ -147,8 +146,8 @@ def validate_add_remove(user_input):
 
 def add_remove_word(opt_add_rmv, words, word_tip):
     for i in range(2):
-        print(f"Words: {words}")
-        print(f"Words tips: {word_tip}")
+        # print(f"Words: {words}")
+        # print(f"Words tips: {word_tip}")
         if opt_add_rmv == "Add Word":
             while True:
                 try:
@@ -171,17 +170,16 @@ def add_remove_word(opt_add_rmv, words, word_tip):
         elif opt_add_rmv == "Remove Word":
             while True:
                 try:
-                    word_to_remove = input("Word to remove >> ").lower().strip()
-                    valid_word_remove = validate_add_remove(word_to_remove)
-
-                    if valid_word_remove and word_to_remove in words:
-                        word_index = words.index(word_to_remove)
-                        words.remove(word_to_remove)
-                        word_tip.pop(word_index)
-                        break
-                    else:
-                        print("WORD NOT IN LIST OF WORDS")
-                        raise ValueError
+                    word_remove_index = input("Position of word to remove >> ").strip()
+                    if len(word_remove_index) == 1 or not word_remove_index.isdecimal():
+                        int_word_remove_index = int(word_remove_index) - 1
+                        if int_word_remove_index < len(words):
+                            words.pop(int_word_remove_index)
+                            word_tip.pop(int_word_remove_index)
+                            break
+                        else:
+                            print("WORD NOT IN LIST OF WORDS")
+                            raise ValueError
                 except ValueError:
                     print("Invalid value!")
                     continue
@@ -249,9 +247,7 @@ def loose_life(life, hearts_list):
     :return:
     """
     life -= 1
-    hearts_list.insert(1, "🖤")
-    hearts_list.remove("🧡")
-    hearts_list.sort(reverse=True)
+    hearts_list.remove(" ❤ ")
     return life
 
 
@@ -261,7 +257,7 @@ def stars_life():
     :return:
     """
     life = 6
-    hearts_list = ["🧡"] * life
+    hearts_list = [" ❤ "] * life
 
     return hearts_list, life
 
@@ -323,5 +319,4 @@ def letter_test(random_word_var, user_input, life, hearts_list, wrong_letters, r
 def win_game(place_letter, game_time):
     if "_" not in place_letter:
         print(f"\n{col['green-text']}You took {int(time.time() - game_time)} seconds to finish!{col['clean']}")
-        end_game(f"\t\t{col['green']}🎉 YOU WON, CONGRATS! 🎉{col['clean']}\n{col['red-text']}👿 "
-                 f"But I really wish you had died... 👿{col['clean']}")
+        end_game(f"\t{col['green']}🎉 YOU WON, CONGRATS! 🎉{col['clean']}")

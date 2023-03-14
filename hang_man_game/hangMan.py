@@ -11,13 +11,12 @@ if level_choice != 'Root':
 opt_add_rmv = None
 if level_choice == 'Coffee with Milk':
     opt_add_rmv = fc.show_add_remove_opt()
-    # print(opt_add_rmv)
 
 if level_choice != 'Root':
     random_word, tip = fc.random_word(word_theme, opt_add_rmv, level_choice)
 else:
     random_word, tip = word_api.get_api_random()
-    print(random_word)
+    # print(random_word)
 
 # TIMER
 if level_choice != 'Nutella':
@@ -28,8 +27,6 @@ if level_choice != 'Nutella':
 
 # Game time
 game_time = fc.start_time_game()
-
-print(f"{col['blue']}CLUE: {tip}{col['clean']}")
 
 # LIFE
 hearts_list, life = fc.stars_life()
@@ -42,6 +39,7 @@ placement_letters = fc.create_placement_letters(random_word)
 
 while True:
     print("-" * 40)
+    print(f"{col['blue']}CLUE: {tip}{col['clean']}")
     for heart in hearts_list:
         print(heart, end="")
     print(f" = {life}")
