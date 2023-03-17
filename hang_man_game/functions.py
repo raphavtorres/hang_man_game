@@ -2,28 +2,30 @@ from random import randint
 from collors import collors as col
 import time
 import inquirer
-
 # libs to time
 from threading import Timer
 import os
 
 
-def end_game(msg=f"\t{col['red-text']}💀 GAME OVER 💀{col['clean']}"):
+def end_game(msg=f"\t{col['red-text']}💀 GAME OVER 💀{col['clean']}", secret_word=None):
     """
     Function to end the game in different scenarios
     :return:
     """
+    if secret_word is not None:
+        print(f"The secret word was: {secret_word}")
+
     print(msg)
     pid = os.getpid()
     os.kill(pid, -1)  # case problem change to 0
 
 
-def timer(seconds_amount):
+def timer(seconds_amount, secret_word):
     """
     Starts the timer
     :return:
     """
-    timer_variable = Timer(seconds_amount, time_end)
+    timer_variable = Timer(seconds_amount, get_word(secret_word))
     timer_variable.start()
 
 
@@ -33,13 +35,18 @@ def start_time_game():
 
 
 def loose_game(secret_word):
-    print(f"The secret word was: {secret_word}")
-    end_game()
+    end_game(secret_word)
 
 
-def time_end():
-    print(f"\t{col['red-text']}TIME'S UP ⏳{col['clean']}")
-    end_game()
+# def time_end():
+#     print(f"\t{col['red-text']}TIME'S UP ⏳{col['clean']}")
+#     end_game()
+
+def get_word(secret_word):
+    def time_end():
+        print(f"\t{col['red-text']}TIME'S UP ⏳{col['clean']}")
+        end_game(secret_word=secret_word)
+    return time_end
 
 
 def input_style():
@@ -119,7 +126,6 @@ def header():
 def validate_user_input(user_input):
     is_valid = True
     if user_input == " " or len(user_input) > 1 or len(user_input) < 1 or not user_input.isalpha():
-        # is_valid = False
         raise ValueError
     return is_valid
 
@@ -316,7 +322,7 @@ def letter_test(random_word_var, user_input, life, hearts_list, wrong_letters, r
     return is_correct_letter, life, wrong_letters
 
 
-def win_game(place_letter, game_time):
+def win_game(place_letter, game_time, secret_word):
     if "_" not in place_letter:
         print(f"\n{col['green-text']}You took {int(time.time() - game_time)} seconds to finish!{col['clean']}")
-        end_game(f"\t{col['green']}🎉 YOU WON, CONGRATS! 🎉{col['clean']}")
+        end_game(f"\t{col['green']}🎉 YOU WON, CONGRATS! 🎉{col['clean']}", secret_word=secret_word)
