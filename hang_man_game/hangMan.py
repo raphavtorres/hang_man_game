@@ -21,9 +21,9 @@ else:
 # TIMER
 if level_choice != 'Nutella':
     if level_choice == 'Coffee with Milk':
-        fc.timer(30.0)
+        fc.timer(30.0, random_word)
     else:
-        fc.timer(20.0)
+        fc.timer(20.0, random_word)
 
 # Game time
 game_time = fc.start_time_game()
@@ -47,7 +47,7 @@ while True:
     print(f" {col['red-text']}||Wrong letters ❌: {wrong_letters}||{col['clean']}")
 
     fc.show_placement_letters(placement_letters)
-    fc.win_game(placement_letters, game_time)
+    fc.win_game(placement_letters, game_time, secret_word=random_word)
 
     try:
         user_input = input(">> ").lower()
